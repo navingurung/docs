@@ -144,3 +144,42 @@ alembic upgrade head
 ```bash
 alembic current
 ```
+
+
+### Two ways a migration gets applied
+
+**1. Via Docker (shared env — staging):**
+Our container runs `alembic upgrade head` automatically on startup (see the
+Dockerfile CMD). So on shared environments you do NOT run it by hand — it
+applies when the container starts with the merged code.
+- A migration reaches a shared DB only after **merge → pull → container restart**.
+- An unmerged migration on someone's branch cannot affect anyone else's DB.
+- The merge is the gate: no half-finished migration hits the shared DB.
+
+**2. Locally (your own DB):**
+You run `alembic upgrade head` yourself to test before merge.
+
+### Be careful: applying an unmerged migration locally
+
+If you run `alembic upgrade head` locally on a not-yet-merged migration, your DB
+gets **stamped** to that revision. If that migration file later changes id, gets
+reworked, or isn't merged, the DB points at a revision whose file doesn't exist
+in this checkout — causing:
+
+```
+FAILED: Can't locate revision identified by '<id>'
+```
+
+(This is the same error as Result.1 above — it happened because the file wasn't
+pulled yet.)
+
+Only apply migrations locally when they are near-final. To recover — realign the
+DB's version pointer to a revision that exists, without running any migration:
+
+```bash
+alembic stamp <valid_revision_id>
+# or
+alembic stamp head
+```
+
+Then upgrade forward normally.
