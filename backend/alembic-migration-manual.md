@@ -113,7 +113,7 @@ git pull
 ```bash
 alembic current
 ```
-- Result(Example):
+- Result.1(Example, if we for to pull[git pull]):
 ```bash
 ((venv) ) ➜  taimatsu-tax-free-backend git:(staging) alembic current
 INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
@@ -122,6 +122,18 @@ ERROR [alembic.util.messaging] Can't locate revision identified by '9391af139532
   FAILED: Can't locate revision identified by '9391af139532'
 ((venv) ) ➜  taimatsu-tax-free-backend git:(staging)
 ```
+
+Result.2(Example after git pull)
+```bash
+
+((venv) ) ➜  taimatsu-tax-free-backend git:(staging) alembic current
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+9391af139532 (head)
+((venv) ) ➜  taimatsu-tax-free-backend git:(staging) 
+
+```
+
 
 3. Run the migration:
 ```bash
