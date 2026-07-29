@@ -101,4 +101,25 @@ INFO  [alembic.autogenerate.compare] Detected added foreign key (shop_id)(id) on
   Generating /Users/taimatsu/Documents/STORE/taimatsu-tax-free-backend/alembic/versions/bb9482d4a403_add_shopify_stores_table.py ...  done
 ```
 
+### After merge — run the migration locally
 
+1. Switch to staging and pull the merged code:
+```bash
+git checkout staging
+git pull
+```
+
+2. Check the current head (should be the *previous* revision, not yours yet):
+```bash
+alembic current
+```
+
+3. Run the migration:
+```bash
+alembic upgrade head
+```
+
+4. Confirm it applied — `alembic current` should now show the new revision id:
+```bash
+alembic current
+```
