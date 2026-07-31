@@ -137,6 +137,36 @@ shopify app webhook trigger
 確認する場所:
 - ngrok inspector (`http://127.0.0.1:4040`) — リクエストが届いているか
 - バックエンドのログ — `[compliance] data request for shop=...` が出ているか
+- 
+<img width="1296" height="783" alt="Screenshot 2026-07-31 at 17 17 01" src="https://github.com/user-attachments/assets/622e2ac7-8876-4ab3-86f4-3a7d68553e81" />
+
+## Real Example
+```bash
+➜  taimatsu-tax-free-shopify-cli shopify app webhook trigger
+?  Webhook ApiVersion:
+✔  2026-07
+
+?  Webhook Topic:
+✔  customers/data_request
+
+?  Delivery method:
+✔  HTTP
+
+?  Address for delivery:
+✔  https://simple-plentiful-puzzling.ngrok-free.dev/shopify/webhooks/compliance
+
+╭─ info ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│                                                                                                                                                                                 │
+│  Using shopify.app.toml for default values:                                                                                                                                     │
+│                                                                                                                                                                                 │
+│    • App:             st-sandbox                                                                                                                                                │
+│                                                                                                                                                                                 │
+╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+
+✅ Success! Webhook has been enqueued for delivery.
+```
+
+<img width="1270" height="311" alt="Screenshot 2026-07-31 at 17 18 05" src="https://github.com/user-attachments/assets/5a508fd0-ce4e-46e2-8cd0-c963b2b4b4d4" />
 
 ## 13. customers/redact をテストする
 同じ手順で Topic を `customers/redact` にして実行する。
@@ -154,3 +184,13 @@ shopify app webhook trigger
 - ngrok inspector
 - バックエンドのログ — `[compliance] shop redact completed for shop=...`
 - DB上で `shopify_stores` の該当行が削除されているか、紐づく `shops` の shopify関連カラムがクリアされているか
+
+- <img width="1301" height="388" alt="Screenshot 2026-07-31 at 17 19 35" src="https://github.com/user-attachments/assets/424f43e6-8ab8-4cc6-aefe-7d0b1e5a8080" />
+
+
+<img width="1297" height="390" alt="Screenshot 2026-07-31 at 17 22 22" src="https://github.com/user-attachments/assets/c7c60656-e693-42a7-a36e-f4498c615caf" />
+
+
+
+
+
