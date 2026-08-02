@@ -187,6 +187,9 @@ shopify app webhook trigger
 
 **結果: ✅ 成功 — ngrok inspectorで200 OK、バックエンドログに `[compliance] customer redact for shop=...` を確認。**
 
+<img width="1301" height="388" alt="Screenshot 2026-07-31 at 17 19 35" src="https://github.com/user-attachments/assets/424f43e6-8ab8-4cc6-aefe-7d0b1e5a8080" />
+
+
 ## 14. shop/redact をテストする（最後に実行）
 同じ手順で Topic を `shop/redact` にして実行する。
 
@@ -196,8 +199,6 @@ shopify app webhook trigger
 - ngrok inspector
 - バックエンドのログ — `[compliance] shop redact completed for shop=...`
 - DB上で `shopify_stores` の該当行が削除されているか、紐づく `shops` の shopify関連カラムがクリアされているか
-
-<img width="1301" height="388" alt="Screenshot 2026-07-31 at 17 19 35" src="https://github.com/user-attachments/assets/424f43e6-8ab8-4cc6-aefe-7d0b1e5a8080" />
 
 
 <img width="1297" height="390" alt="Screenshot 2026-07-31 at 17 22 22" src="https://github.com/user-attachments/assets/c7c60656-e693-42a7-a36e-f4498c615caf" />
