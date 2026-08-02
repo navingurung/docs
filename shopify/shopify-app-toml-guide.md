@@ -120,6 +120,14 @@ shopify app deploy
 
 # ここから: 3つのWebhookをテストする
 
+## なぜこれが必須なのか
+
+Shopifyの公開アプリ（Public App）は、`customers/data_request`・`customers/redact`・`shop/redact` の3つのGDPR compliance webhookに対応することが**必須**。これは、アプリが実際に顧客データを保存しているかどうかに関わらず、`read_orders` のように顧客・注文データへのアクセス権を持つスコープを1つでも申請している時点で課される要件。
+
+Shopifyの審査チームは申請時にこの3つのwebhookへ実際にテストイベントを送信し、正しく200系レスポンスを返すか確認する。ここが未実装・不正な場合、審査に通らない最も一般的な理由の一つとなる。
+
+`app/uninstalled` はGDPR項目ではないが、ストアごとのアクセストークンのライフサイクル管理（アンインストール時に無効化する）のために標準的に必要。
+
 ## 12. customers/data_request をテストする
 ```
 shopify app webhook trigger
@@ -168,12 +176,16 @@ shopify app webhook trigger
 
 <img width="1270" height="311" alt="Screenshot 2026-07-31 at 17 18 05" src="https://github.com/user-attachments/assets/5a508fd0-ce4e-46e2-8cd0-c963b2b4b4d4" />
 
+**結果: ✅ 成功 — ngrok inspectorで200 OK、バックエンドログに `[compliance] data request for shop=...` を確認。**
+
 ## 13. customers/redact をテストする
 同じ手順で Topic を `customers/redact` にして実行する。
 
 確認する場所:
 - ngrok inspector
 - バックエンドのログ — `[compliance] customer redact for shop=...`
+
+**結果: ✅ 成功 — ngrok inspectorで200 OK、バックエンドログに `[compliance] customer redact for shop=...` を確認。**
 
 ## 14. shop/redact をテストする（最後に実行）
 同じ手順で Topic を `shop/redact` にして実行する。
@@ -190,7 +202,26 @@ shopify app webhook trigger
 
 <img width="1297" height="390" alt="Screenshot 2026-07-31 at 17 22 22" src="https://github.com/user-attachments/assets/c7c60656-e693-42a7-a36e-f4498c615caf" />
 
+**結果: ✅ 成功 — `shopify_stores` テーブルから該当行が削除され、紐づく `shops` の `shopify_store_id` / `shopify_location_id_public` / `use_shopify_public` がすべてクリアされたことを確認。**
 
+---
 
+# テスト完了サマリー
 
+AdminBackend側の全10エンドポイントを実際のShopify開発ストアに対してテストし、すべて正常動作を確認した。
 
+| # | エンドポイント | 結果 |
+|---|---|---|
+| 1 | `GET /shopify/app` | ✅ |
+| 2 | `POST /shopify/auth/token` | ✅ |
+| 3 | `POST /shopify/link-shopify-store` | ✅ |
+| 4 | `POST /shopify/unlink-shopify-store` | ✅ |
+| 5 | `GET /shopify/stores/available-to-connect` | ✅ |
+| 6 | `POST /shopify/webhooks/app/uninstalled` | ✅ |
+| 7 | `POST /shopify/webhooks/compliance`（GDPR 3件） | ✅ |
+| 8 | `GET /shopify/stores/{store_id}/locations`（GraphQL） | ✅ |
+| 9 | `POST /shopify/shop/connect` | ✅ |
+| 10 | `DELETE /shopify/shop/disconnect` | ✅ |
+
+## 残タスク
+POS backend側（`shopify_pos.py`）の `orders/create` ・ `orders/paid` Webhookは別セッションで対応。
