@@ -145,7 +145,7 @@ shopify app webhook trigger
 確認する場所:
 - ngrok inspector (`http://127.0.0.1:4040`) — リクエストが届いているか
 - バックエンドのログ — `[compliance] data request for shop=...` が出ているか
-- 
+  
 <img width="1296" height="783" alt="Screenshot 2026-07-31 at 17 17 01" src="https://github.com/user-attachments/assets/622e2ac7-8876-4ab3-86f4-3a7d68553e81" />
 
 ## Real Example
@@ -197,7 +197,7 @@ shopify app webhook trigger
 - バックエンドのログ — `[compliance] shop redact completed for shop=...`
 - DB上で `shopify_stores` の該当行が削除されているか、紐づく `shops` の shopify関連カラムがクリアされているか
 
-- <img width="1301" height="388" alt="Screenshot 2026-07-31 at 17 19 35" src="https://github.com/user-attachments/assets/424f43e6-8ab8-4cc6-aefe-7d0b1e5a8080" />
+<img width="1301" height="388" alt="Screenshot 2026-07-31 at 17 19 35" src="https://github.com/user-attachments/assets/424f43e6-8ab8-4cc6-aefe-7d0b1e5a8080" />
 
 
 <img width="1297" height="390" alt="Screenshot 2026-07-31 at 17 22 22" src="https://github.com/user-attachments/assets/c7c60656-e693-42a7-a36e-f4498c615caf" />
@@ -223,5 +223,3 @@ AdminBackend側の全10エンドポイントを実際のShopify開発ストア�
 | 9 | `POST /shopify/shop/connect` | ✅ |
 | 10 | `DELETE /shopify/shop/disconnect` | ✅ |
 
-## 残タスク
-POS backend側（`shopify_pos.py`）の `orders/create` ・ `orders/paid` Webhookは別セッションで対応。
