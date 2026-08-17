@@ -10,7 +10,28 @@
 
 Security lives under Correctness (broken if unsafe). Performance lives under Complexity (inefficient code = harder to maintain, slower to run).
 
-## 2. Execution Workflow
+## 2. Workflow Diagram
+
+```mermaid
+flowchart TD
+    A[Assigned as Reviewer] --> B{CI Passing?}
+    B -- No --> C[Bounce back to author]
+    B -- Yes --> D[High-level pass: read diff, check Clarity]
+    D --> E{Understandable in ~2 min?}
+    E -- No --> C
+    E -- Yes --> F[Deep dive: 3C checklist]
+    F --> G[Correctness & Security]
+    F --> H[Clarity]
+    F --> I[Complexity & Performance]
+    G --> J{Issues found?}
+    H --> J
+    I --> J
+    J -- Yes --> K[Comment: Request / Reason / Resource]
+    K --> L[Request changes]
+    J -- No --> M[Approve]
+```
+
+## 3. Execution Workflow
 
 **Step 1 — Automated run (before human review)**
 - Linter (ESLint / Ruff) catches format issues
@@ -26,7 +47,7 @@ Security lives under Correctness (broken if unsafe). Performance lives under Com
 - Clarity: names obvious? nesting reasonable? does the diff match the PR description?
 - Complexity & Performance: simpler way to do this? any loop/query that won't scale (N+1, etc.)?
 
-## 3. PR Review Mechanics (as assigned reviewer)
+## 4. PR Review Mechanics (as assigned reviewer)
 
 1. **Check CI status** first — GitHub Actions or equivalent. Red CI = don't review yet.
 2. **Read the diff on GitHub** for the high-level pass.
@@ -41,7 +62,7 @@ Security lives under Correctness (broken if unsafe). Performance lives under Com
    - `Request changes` — blocker found
    - `Comment` — feedback, non-blocking
 
-## 4. Comment Formula: Request / Reason / Resource
+## 5. Comment Formula: Request / Reason / Resource
 
 - **Request** — what needs to change
 - **Reason** — why, tied back to Correctness / Clarity / Complexity
@@ -49,7 +70,7 @@ Security lives under Correctness (broken if unsafe). Performance lives under Com
 
 > Example: "Please move this data fetch outside the `map` loop [Request]. Running queries inside a loop creates an N+1 performance bottleneck [Reason]. Fetch all IDs at once using `whereIn()` instead: `[snippet]` [Resource]."
 
-## 5. Linter/Formatter Reference (set up later, during testing)
+## 6. Linter/Formatter Reference (set up later, during testing)
 
 **Frontend (Next.js / TS)**
 ```bash
@@ -65,7 +86,7 @@ ruff check . --fix
 ruff format .
 ```
 
-## 6. PR Review Checklist (quick reference)
+## 7. PR Review Checklist (quick reference)
 
 - [ ] CI passing
 - [ ] Correctness: logic sound, edge cases handled, no security gaps
