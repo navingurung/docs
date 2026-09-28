@@ -25,3 +25,16 @@ https://github.com/user-attachments/assets/959a4ce0-3469-4e14-8553-c823e9282b19
 
 
 <img width="1602" height="978" alt="Screenshot 2026-09-28 at 13 19 34" src="https://github.com/user-attachments/assets/2ca423a8-645f-464e-a768-649639b68919" />
+
+
+
+## Step 2: Run the App on the Simulator
+
+From the project root (`SamuraiTax-Mobile`):
+
+```bash
+npm install
+npx expo run:ios
+```
+
+The first build takes a few minutes. The app opens on the simulator automatically.
