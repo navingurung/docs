@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SamuraiTax Mobile release route</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Public+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F3F6FA; --surface:#FFFFFF; --ink:#13213A; --muted:#566782; --rule:#DCE4EF;
+  --trunk:#1F7FE5; --ios:#7B5CE6; --android:#1E9E5A; --gold:#D99A12; --code:#EEF3FA;
+  --display:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D1522; --surface:#152132; --ink:#E6EDF7; --muted:#9AA9C0; --rule:#24344A;
+    --trunk:#4C9DF5; --ios:#A08BFF; --android:#3DC57F; --gold:#F0B73A; --code:#1B2A40;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D1522; --surface:#152132; --ink:#E6EDF7; --muted:#9AA9C0; --rule:#24344A;
+  --trunk:#4C9DF5; --ios:#A08BFF; --android:#3DC57F; --gold:#F0B73A; --code:#1B2A40;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 var(--body);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1040px;margin:0 auto;padding:48px 24px 80px}
+h1,h2,h3{font-family:var(--display);margin:0;line-height:1.15}
+h1{font-size:clamp(2rem,5vw,3.25rem);font-weight:800;letter-spacing:-.02em;max-width:16ch}
+h2{font-size:1.5rem;font-weight:700;letter-spacing:-.01em;margin-bottom:20px}
+h3{font-size:1.05rem;font-weight:700}
+p{margin:0}
+code{font-family:var(--mono);font-size:.88em;background:var(--code);padding:.1em .4em;border-radius:5px}
+svg.i{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* hero */
+.hero{display:grid;gap:20px;padding-bottom:40px;border-bottom:1px solid var(--rule)}
+.app{display:flex;align-items:center;gap:12px;color:var(--muted);font-weight:500}
+.app .mark{width:40px;height:40px;border-radius:10px;background:var(--trunk);display:grid;place-items:center;color:#fff}
+.hero .lead{font-size:1.15rem;color:var(--muted);max-width:56ch}
+.legend{display:flex;flex-wrap:wrap;gap:20px;margin-top:4px;font-size:.95rem}
+.legend span{display:flex;align-items:center;gap:8px}
+.legend b{display:inline-block;width:28px;height:6px;border-radius:3px}
+
+/* rules */
+.rules{padding:48px 0;border-bottom:1px solid var(--rule)}
+.rules ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px 32px;counter-reset:r}
+.rules li{counter-increment:r;display:grid;grid-template-columns:36px 1fr;gap:12px;align-items:start;padding:12px 0}
+.rules li::before{content:counter(r);font:700 1rem/36px var(--display);text-align:center;width:36px;height:36px;border-radius:50%;background:var(--ink);color:var(--bg)}
+.rules strong{display:block;font-weight:600}
+.rules small{color:var(--muted);font-size:.92rem}
+
+/* route */
+.route{padding:48px 0}
+.line{list-style:none;margin:0;padding:0;position:relative;--c:var(--trunk)}
+.line::before{content:"";position:absolute;left:23px;top:0;bottom:0;width:6px;border-radius:3px;background:var(--c)}
+.line.ios{--c:var(--ios)} .line.android{--c:var(--android)}
+.stn{position:relative;padding:0 0 28px 72px;min-height:48px}
+.stn:last-child{padding-bottom:4px}
+.badge{position:absolute;left:0;top:0;width:52px;height:52px;border-radius:50%;background:var(--surface);border:6px solid var(--c);display:grid;place-items:center;font:800 .95rem/1 var(--display);color:var(--c);letter-spacing:-.02em}
+.stn h3{display:flex;align-items:center;gap:8px;padding-top:4px}
+.stn h3 svg{color:var(--c)}
+.stn p{color:var(--muted);margin-top:4px;max-width:60ch}
+.cmd{display:flex;align-items:stretch;margin-top:10px;max-width:100%;border:1px solid var(--rule);border-radius:8px;background:var(--code);overflow:hidden}
+.cmd pre{margin:0;padding:10px 12px;overflow-x:auto;font:400 .88rem/1.5 var(--mono);flex:1;white-space:pre}
+.cmd button{flex:none;border:0;border-left:1px solid var(--rule);background:transparent;color:var(--muted);font:500 .85rem var(--body);padding:0 12px;cursor:pointer;display:flex;align-items:center;gap:6px}
+.cmd button:hover{color:var(--ink)}
+.cmd button:focus-visible,input:focus-visible,.reset:focus-visible{outline:3px solid var(--trunk);outline-offset:2px}
+.verify{list-style:none;padding:0;margin:10px 0 0;display:flex;flex-wrap:wrap;gap:8px}
+.verify li{display:flex;align-items:center;gap:6px;font-size:.9rem;padding:4px 10px;border-radius:999px;background:color-mix(in srgb,var(--gold) 16%,transparent);color:var(--ink)}
+.verify svg{width:16px;height:16px;color:var(--gold)}
+.stn.gate{--c:var(--gold)}
+
+/* fork + merge */
+.fork,.merge{position:relative;height:64px}
+.fork::before{content:"";position:absolute;left:23px;top:0;height:100%;width:6px;background:linear-gradient(var(--trunk),var(--ios))}
+.fork i{position:absolute;left:23px;top:22px;height:6px;width:calc(50% + 22px);border-radius:3px;background:linear-gradient(90deg,var(--trunk),var(--android))}
+.fork::after{content:"";position:absolute;left:calc(50% + 16px + 23px);top:22px;bottom:0;width:6px;border-radius:3px 3px 0 0;background:var(--android)}
+.merge::before{content:"";position:absolute;left:23px;top:0;height:100%;width:6px;background:linear-gradient(var(--ios),var(--trunk))}
+.merge i{position:absolute;left:23px;bottom:22px;height:6px;width:calc(50% + 22px);border-radius:3px;background:linear-gradient(90deg,var(--trunk),var(--android))}
+.merge::after{content:"";position:absolute;left:calc(50% + 16px + 23px);top:0;height:calc(100% - 16px);width:6px;background:var(--android)}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.split h4{margin:0 0 18px 72px;font:700 1rem var(--display);display:flex;align-items:center;gap:8px}
+.split .ios-h{color:var(--ios)} .split .and-h{color:var(--android)}
+.final .line::before{bottom:auto;height:24px}
+.stn.tag .badge{background:var(--trunk);color:#fff}
+
+/* checklist + notes */
+.bottom{display:grid;grid-template-columns:1fr 1fr;gap:48px;padding-top:40px;border-top:1px solid var(--rule)}
+.check{list-style:none;margin:0;padding:0}
+.check li{border-bottom:1px solid var(--rule)}
+.check label{display:flex;gap:12px;align-items:flex-start;padding:12px 0;cursor:pointer}
+.check input{width:20px;height:20px;margin-top:3px;accent-color:var(--trunk);flex:none}
+.check input:checked+span{color:var(--muted);text-decoration:line-through}
+.reset{margin-top:16px;border:1px solid var(--rule);background:var(--surface);color:var(--ink);font:500 .9rem var(--body);padding:8px 14px;border-radius:8px;cursor:pointer}
+.notes dl{margin:0}
+.notes dt{font-weight:600;display:flex;align-items:center;gap:8px;margin-top:16px}
+.notes dt:first-child{margin-top:0}
+.notes dt svg{color:var(--trunk)}
+.notes dd{margin:4px 0 0 28px;color:var(--muted);font-size:.95rem}
+
+@media (max-width:760px){
+  .wrap{padding:32px 18px 64px}
+  .split,.bottom{grid-template-columns:1fr}
+  .fork,.merge{height:28px}
+  .fork i,.fork::after,.merge i,.merge::after{display:none}
+  .fork::before{background:var(--trunk)}
+  .merge::before{background:var(--trunk)}
+  .split{gap:8px}
+  .split > div + div{padding-top:20px;border-top:1px dashed var(--rule)}
+  .stn{padding-left:64px}
+  .badge{width:48px;height:48px}
+  .line::before{left:21px}
+}
+@media (prefers-reduced-motion:no-preference){
+  .route .line::before{transform-origin:top;animation:draw .9s ease-out both}
+  @keyframes draw{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-branch" viewBox="0 0 24 24"><circle cx="6" cy="5" r="2"/><circle cx="6" cy="19" r="2"/><circle cx="18" cy="7" r="2"/><path d="M6 7v10M18 9c0 5-12 3-12 8"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></symbol>
+  <symbol id="i-hash" viewBox="0 0 24 24"><path d="M5 9h14M5 15h14M10 4 8 20M16 4l-2 16"/></symbol>
+  <symbol id="i-pr" viewBox="0 0 24 24"><circle cx="6" cy="5" r="2"/><circle cx="6" cy="19" r="2"/><circle cx="18" cy="19" r="2"/><path d="M6 7v10M18 17V9a3 3 0 0 0-3-3h-4m0 0 2-2m-2 2 2 2"/></symbol>
+  <symbol id="i-merge" viewBox="0 0 24 24"><circle cx="6" cy="5" r="2"/><circle cx="6" cy="19" r="2"/><circle cx="18" cy="12" r="2"/><path d="M6 7v10M6 7c0 4 4 5 10 5"/></symbol>
+  <symbol id="i-broom" viewBox="0 0 24 24"><path d="M4 7h16M4 12h10M4 17h6"/><path d="m15 15 2 2 4-4"/></symbol>
+  <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a5 5 0 1 1 1-9.9A6 6 0 0 1 19.5 10 4 4 0 0 1 18 18Z"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4m0 0-5 5m5-5 5 5M4 20h16"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v12m0 0-5-5m5 5 5-5M4 20h16"/></symbol>
+  <symbol id="i-flask" viewBox="0 0 24 24"><path d="M9 3h6M10 3v6L4.5 18.5A2 2 0 0 0 6.2 21.5h11.6a2 2 0 0 0 1.7-3L14 9V3"/><path d="M7 15h10"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></symbol>
+  <symbol id="i-tag" viewBox="0 0 24 24"><path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9Z"/><circle cx="8" cy="8" r="1.5"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="m11 12 9-9m-3 3 3 3m-6 0 2 2"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7Z"/></symbol>
+</svg>
+
+<main class="wrap">
+  <header class="hero">
+    <div class="app"><span class="mark"><svg class="i"><use href="#i-send"/></svg></span>SAMURAI TAX Mobile</div>
+    <h1>The release route, from Linear issue to store review</h1>
+    <p class="lead">One line for the code, then it splits for iOS and Android and joins again at the tag. Follow the stations in order and never skip one.</p>
+    <div class="legend" aria-label="Line colors">
+      <span><b style="background:var(--trunk)"></b>Code and build</span>
+      <span><b style="background:var(--gold)"></b>Verify</span>
+      <span><b style="background:var(--ios)"></b>iOS</span>
+      <span><b style="background:var(--android)"></b>Android</span>
+    </div>
+  </header>
+
+  <section class="rules" aria-labelledby="rules-h">
+    <h2 id="rules-h">Six rules</h2>
+    <ol>
+      <li><div><strong>Production builds come from <code>main</code> only</strong><small>Never from staging or a feature branch.</small></div></li>
+      <li><div><strong>Build from a clean, pulled checkout</strong><small><code>git status</code> is clean, and Expo shows the commit without <code>*</code>.</small></div></li>
+      <li><div><strong>Commit the version bump before building</strong><small>The version is baked into the build.</small></div></li>
+      <li><div><strong>Test every store build first</strong><small>TestFlight for iOS, Internal testing for Android.</small></div></li>
+      <li><div><strong>Never edit build numbers</strong><small>EAS increments them automatically.</small></div></li>
+      <li><div><strong>Tag every release</strong><small><code>vX.Y.Z</code> marks exactly what shipped.</small></div></li>
+    </ol>
+  </section>
+
+  <section class="route" aria-labelledby="route-h">
+    <h2 id="route-h">The route</h2>
+
+    <ol class="line">
+      <li class="stn"><span class="badge">R1</span>
+        <h3><svg class="i"><use href="#i-branch"/></svg>Branch from staging</h3>
+        <p>Use the branch name from the Linear issue.</p>
+        <div class="cmd"><pre>git switch staging &amp;&amp; git pull
+git switch -c &lt;branch-name-from-linear&gt;</pre><button type="button" data-copy><svg class="i"><use href="#i-copy"/></svg>Copy</button></div>
+      </li>
+      <li class="stn"><span class="badge">R2</span>
+        <h3><svg class="i"><use href="#i-phone"/></svg>Make the change and run it</h3>
+        <p>Test on a real iPhone. After a native change, run <code>npx expo prebuild --clean --platform ios</code> first and re-select the TAIMATSU signing team in Xcode.</p>
+        <div class="cmd"><pre>npx expo run:ios --device</pre><button type="button" data-copy><svg class="i"><use href="#i-copy"/></svg>Copy</button></div>
+      </li>
+      <li class="stn"><span class="badge">R3</span>
+        <h3><svg class="i"><use href="#i-check"/></svg>Lint and test</h3>
+        <p>Zero lint errors and every test passing. Warnings don't block.</p>
+        <div class="cmd"><pre>npx expo lint &amp;&amp; npm test</pre><button type="button" data-copy><svg class="i"><use href="#i-copy"/></svg>Copy</button></div>
+      </li>
+      <li class="stn"><span class="badge">R4</span>
+        <h3><svg class="i"><use href="#i-hash"/></svg>Bump the version</h3>
+        <p>Set <code>version: "X.Y.Z"</code> in <code>app.config.ts</code> and commit it on its own as <code>chore: bump version to X.Y.Z</code>.</p>
+      </li>
+      <li class="stn"><span class="badge">R5</span>
+        <h3><svg class="i"><use href="#i-pr"/></svg>Review into staging</h3>
+        <p>Push, open a PR into <code>staging</code>, get it approved, merge.</p>
+      </li>
+      <li class="stn"><span class="badge">R6</span>
+        <h3><svg class="i"><use href="#i-merge"/></svg>Promote to main</h3>
+        <p>Open a PR from <code>staging</code> into <code>main</code> and merge. <code>main</code> must equal what ships.</p>
+      </li>
+      <li class="stn"><span class="badge">R7</span>
+        <h3><svg class="i"><use href="#i-broom"/></svg>Get a clean checkout</h3>
+        <p>The last line must say “working tree clean”.</p>
+        <div class="cmd"><pre>git switch main &amp;&amp; git pull &amp;&amp; git status</pre><button type="button" data-copy><svg class="i"><use href="#i-copy"/></svg>Copy</button></div>
+      </li>
+      <li class="stn"><span class="badge">R8</span>
+        <h3><svg class="i"><use href="#i-cloud"/></svg>Build in the cloud</h3>
+        <p>EAS builds iOS and Android together. No Android Studio or Xcode needed.</p>
+        <div class="cmd"><pre>npx eas build --profile production --platform all</pre><button type="button" data-copy><svg class="i"><use href="#i-copy"/></svg>Copy</button></div>
+      </li>
+      <li class="stn gate"><span class="badge">V</span>
+        <h3><svg class="i"><use href="#i-eye"/></svg>Verify on expo.dev</h3>
+        <p>Open Builds and check both new builds before going further.</p>
+        <ul class="verify">
+          <li><svg class="i"><use href="#i-check"/></svg>Finished</li>
+          <li><svg class="i"><use href="#i-check"/></svg>Version X.Y.Z</li>
+          <li><svg class="i"><use href="#i-check"/></svg>Profile production</li>
+          <li><svg class="i"><use href="#i-check"/></svg>Commit without *</li>
+        </ul>
+      </li>
+    </ol>
+
+    <div class="fork" aria-hidden="true"><i></i></div>
+
+    <div class="split">
+      <div>
+        <h4 class="ios-h"><svg class="i"><use href="#i-phone"/></svg>iOS line</h4>
+        <ol class="line ios">
+          <li class="stn"><span class="badge">I1</span>
+            <h3><svg class="i"><use href="#i-upload"/></svg>Send to App Store Connect</h3>
+            <p>Uploads the latest iOS build from expo.dev.</p>
+            <div class="cmd"><pre>npx eas submit -p ios --latest</pre><button type="button" data-copy><svg class="i"><use href="#i-copy"/></svg>Copy</button></div>
+          </li>
+          <li class="stn"><span class="badge">I2</span>
+            <h3><svg class="i"><use href="#i-flask"/></svg>Test in TestFlight</h3>
+            <p>Wait for Apple to finish processing, install on an iPhone, run your checks.</p>
+          </li>
+          <li class="stn"><span class="badge">I3</span>
+            <h3><svg class="i"><use href="#i-send"/></svg>Submit for review</h3>
+            <p>Distribution › new version X.Y.Z › select the build › What's New › Submit for Review.</p>
+          </li>
+        </ol>
+      </div>
+      <div>
+        <h4 class="and-h"><svg class="i"><use href="#i-phone"/></svg>Android line</h4>
+        <ol class="line android">
+          <li class="stn"><span class="badge">A1</span>
+            <h3><svg class="i"><use href="#i-download"/></svg>Download the .aab</h3>
+            <p>expo.dev › Builds › the Android build › Download.</p>
+          </li>
+          <li class="stn"><span class="badge">A2</span>
+            <h3><svg class="i"><use href="#i-flask"/></svg>Test in Internal testing</h3>
+            <p>Play Console › Test and release › Testing › Internal testing › Create release. Upload, then install on the test phone with the opt-in link.</p>
+          </li>
+          <li class="stn"><span class="badge">A3</span>
+            <h3><svg class="i"><use href="#i-send"/></svg>Send for review</h3>
+            <p>Promote the same release to Production, add release notes, send for review.</p>
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="merge" aria-hidden="true"><i></i></div>
+
+    <div class="final">
+      <ol class="line">
+        <li class="stn tag"><span class="badge"><svg class="i"><use href="#i-tag"/></svg></span>
+          <h3>Tag the release</h3>
+          <p>Marks the exact code that shipped.</p>
+          <div class="cmd"><pre>git tag vX.Y.Z &amp;&amp; git push origin vX.Y.Z</pre><button type="button" data-copy><svg class="i"><use href="#i-copy"/></svg>Copy</button></div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="bottom">
+    <div>
+      <h2>Before you run the build</h2>
+      <ul class="check" id="checklist">
+        <li><label><input type="checkbox" data-k="c1"><span>Release PR merged into <code>main</code></span></label></li>
+        <li><label><input type="checkbox" data-k="c2"><span>On <code>main</code>, pulled</span></label></li>
+        <li><label><input type="checkbox" data-k="c3"><span><code>git status</code> says working tree clean</span></label></li>
+        <li><label><input type="checkbox" data-k="c4"><span><code>version</code> in <code>app.config.ts</code> is the new number</span></label></li>
+        <li><label><input type="checkbox" data-k="c5"><span>Lint has 0 errors and tests pass</span></label></li>
+        <li><label><input type="checkbox" data-k="c6"><span>Logged in to the company Expo account</span></label></li>
+      </ul>
+      <button type="button" class="reset" id="reset">Clear checklist</button>
+    </div>
+    <div class="notes">
+      <h2>Good to know</h2>
+      <dl>
+        <dt><svg class="i"><use href="#i-key"/></svg>Android signing key lives on EAS</dt>
+        <dd>expo.dev › Credentials › Android › <code>com.samuraitax</code>. Its SHA-1 matches Play Console's upload key. Never delete it.</dd>
+        <dt><svg class="i"><use href="#i-folder"/></svg><code>ios/</code> and <code>android/</code> are generated</dt>
+        <dd>Both are gitignored. EAS runs its own prebuild from <code>app.config.ts</code>, so local folders never reach store builds.</dd>
+        <dt><svg class="i"><use href="#i-cloud"/></svg><code>eas build</code> uploads your local files</dt>
+        <dd>It never reads GitHub. A <code>*</code> on expo.dev means uncommitted changes went into the build.</dd>
+        <dt><svg class="i"><use href="#i-bolt"/></svg>Profile decides the app, branch decides the code</dt>
+        <dd><code>production</code> makes the store app. <code>preview</code> builds from <code>staging</code> are for QA.</dd>
+      </dl>
+    </div>
+  </section>
+</main>
+
+<script>
+document.querySelectorAll('[data-copy]').forEach(function(btn){
+  btn.addEventListener('click', async function(){
+    var text = btn.parentElement.querySelector('pre').textContent;
+    var done = function(){ var old = btn.lastChild.textContent; btn.lastChild.textContent = 'Copied'; setTimeout(function(){ btn.lastChild.textContent = old; }, 1500); };
+    try { await navigator.clipboard.writeText(text); done(); }
+    catch(e){
+      var r = document.createRange(); r.selectNodeContents(btn.parentElement.querySelector('pre'));
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      try { document.execCommand('copy'); done(); } catch(_) {}
+    }
+  });
+});
+(function(){
+  var boxes = document.querySelectorAll('#checklist input');
+  var key = 'release-checklist';
+  var state = {};
+  try { state = JSON.parse(localStorage.getItem(key) || '{}') || {}; } catch(e) { state = {}; }
+  boxes.forEach(function(b){
+    b.checked = !!state[b.dataset.k];
+    b.addEventListener('change', function(){
+      state[b.dataset.k] = b.checked;
+      try { localStorage.setItem(key, JSON.stringify(state)); } catch(e) {}
+    });
+  });
+  document.getElementById('reset').addEventListener('click', function(){
+    state = {};
+    boxes.forEach(function(b){ b.checked = false; });
+    try { localStorage.removeItem(key); } catch(e) {}
+  });
+})();
+</script>
+</body>
+</html>
